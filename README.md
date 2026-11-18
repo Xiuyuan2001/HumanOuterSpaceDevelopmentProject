@@ -1,5 +1,8 @@
 # Human Outer Space Development Project
 
+## 版本说明
+Unity 6.3 LTS（6000.3.28f1）
+
 ## 大文件管理
 
 本仓库使用 Git LFS 管理图片、模型、音视频、字体和 Excel 等二进制源文件；具体规则见 `.gitattributes`。Unity 场景、Prefab、文本资源及其 `.meta` 文件仍由普通 Git 跟踪。
