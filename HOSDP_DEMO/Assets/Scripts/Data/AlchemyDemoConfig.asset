@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d63ebb191f8014de1b4429da652dc188, type: 3}
+  m_Name: AlchemyDemoConfig
+  m_EditorClassIdentifier: Assembly-CSharp::AlchemyDemoConfig
+  items:
+  - id: lightness_field
+    kind: 0
+    name: "\u53D8\u8F7B"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: '&&&&'
+  - id: strength_field
+    kind: 0
+    name: "\u529B\u5927\u65E0\u7A77"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: "\xA5\xA5\xA5"
+  - id: beaker
+    kind: 1
+    name: "\u91CF\u676F"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: 
+  - id: crucible
+    kind: 1
+    name: "\u5769\u57DA"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: 
+  - id: test_spell
+    kind: 2
+    name: "\u8BD5\u9A8C\u7B26\u5492"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: 
+  - id: lightness_spell
+    kind: 2
+    name: "\u53D8\u8F7B\u7B26\u5492"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: 
+  - id: failed_spell
+    kind: 2
+    name: "\u5931\u8D25\u7684\u7B26\u5492"
+    fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+    fieldText: 
+  bags:
+  - kind: 0
+    label: "\u5B57\u6BB5\u80CC\u5305"
+    capacity: 5
+    startingItems:
+    - itemId: lightness_field
+      quantity: 9999
+      name: 
+      fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+      fieldText: 
+    - itemId: strength_field
+      quantity: 9999
+      name: 
+      fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+      fieldText: 
+    itemDisplay: 2
+    workbenchAccess: 2
+  - kind: 1
+    label: "\u5B9E\u9A8C\u8BBE\u65BD"
+    capacity: 5
+    startingItems:
+    - itemId: beaker
+      quantity: 1
+      name: 
+      fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+      fieldText: 
+    - itemId: crucible
+      quantity: 1
+      name: 
+      fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+      fieldText: 
+    itemDisplay: 1
+    workbenchAccess: 1
+  - kind: 2
+    label: "\u7B26\u5492\u80CC\u5305"
+    capacity: 5
+    startingItems:
+    - itemId: test_spell
+      quantity: 1
+      name: 
+      fieldLabel: "\u672A\u77E5\u5B57\u6BB5"
+      fieldText: 
+    itemDisplay: 1
+    workbenchAccess: 1
+  workbench:
+  - id: effect
+    label: "\u4F5C\u7528"
+  - id: target
+    label: "\u76EE\u6807"
+  - id: duration
+    label: "\u65F6\u6548"
+  - id: trigger
+    label: "\u89E6\u53D1\u6761\u4EF6"
+  - id: range
+    label: "\u8303\u56F4"
+  recipes:
+  - {fileID: 11400000, guid: fdff7f6e215848e993db1cda48437189, type: 2}
+  failedSpellId: failed_spell
+  legacyWorkbenchSlots: []
+  defaultBagIndex: 0
