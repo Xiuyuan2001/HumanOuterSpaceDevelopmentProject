@@ -4,20 +4,19 @@ using UnityEngine;
 [RequireComponent(typeof(UIManager))]
 public sealed class AlchemyUI : MonoBehaviour
 {
-    [SerializeField] private AlchemyDemoConfig config;
+    [SerializeField] private AlchemySession session;
     [SerializeField] private InventoryUI inventory;
     [SerializeField] private WorkbenchUI workbench;
     [SerializeField] private ItemDragUI drag;
 
-    // 运行时玩法可以通过 Inventory 增加、移除和使用物品
     public InventoryState Inventory { get; private set; }
 
-    private void Awake()
+    private void Start()
     {
-        Inventory = new InventoryState(config);
+        Inventory = session.Inventory;
         drag.Initialize(Inventory);
-        BuildViews(Inventory, drag, (prefab, parent) => Instantiate(prefab, parent));
-        workbench.InitializeSmelting(new SmeltingService(config, Inventory));
+        BuildViews(session.Config, Inventory, drag, (prefab, parent) => Instantiate(prefab, parent));
+        workbench.InitializeSmelting(session.Smelting);
         Inventory.Changed += RefreshViews;
 
         var ui = GetComponent<UIManager>();
@@ -26,7 +25,8 @@ public sealed class AlchemyUI : MonoBehaviour
     }
 
     private void BuildViews(
-        InventoryState inventoryState, ItemDragUI interaction, Func<GameObject, Transform, GameObject> spawn)
+        AlchemyDemoConfig config, InventoryState inventoryState, ItemDragUI interaction,
+        Func<GameObject, Transform, GameObject> spawn)
     {
         inventory.Build(config, inventoryState, interaction, spawn);
         workbench.Build(config, inventoryState, interaction, spawn);
@@ -45,9 +45,9 @@ public sealed class AlchemyUI : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    public void BuildPreview(Func<GameObject, Transform, GameObject> spawn)
-    {
-        BuildViews(new InventoryState(config), null, spawn);
-    }
+    public AlchemyDemoConfig PreviewConfig => session.Config;
+
+    public void BuildPreview(InventoryState previewInventory, Func<GameObject, Transform, GameObject> spawn) =>
+        BuildViews(PreviewConfig, previewInventory, null, spawn);
 #endif
 }

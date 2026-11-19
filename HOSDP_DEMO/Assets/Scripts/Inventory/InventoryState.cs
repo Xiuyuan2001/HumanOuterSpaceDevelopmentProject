@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 internal readonly struct ItemSlot
 {
-    private const int WorkbenchBag = -1;
+    private const int WorkbenchBag = -1;        // 工作台槽位的背包索引，默认是负数，避免和背包索引冲突
 
     private ItemSlot(int bag, int index)
     {
-        Bag = bag;
-        Index = index;
+        Bag = bag;                  // 归属于哪个背包 或者 工作台
+        Index = index;              // 在背包或工作台中的索引
     }
 
     public int Bag { get; }
@@ -20,6 +20,7 @@ internal readonly struct ItemSlot
     public bool IsSameSlot(ItemSlot other) => Bag == other.Bag && Index == other.Index;
 }
 
+// 每个物品的信息 - 包括物品本身、归属位置、显示模式、是否允许放入工作台、数量
 internal sealed class InventoryEntry
 {
     public InventoryEntry(AlchemyItem item, ItemSlot home, BagConfig bag, int quantity)
@@ -46,14 +47,15 @@ internal sealed class InventoryEntry
         new InventoryEntry(Item, Home, ShowsFieldText, AllowsWorkbench, quantity);
 }
 
-// 本次运行的库存和工作台托管材料，配置资源只提供初始数据
+// Inventory Model
 public sealed class InventoryState
 {
-    private readonly BagConfig[] bagConfigs;
-    private readonly Dictionary<string, AlchemyItem> catalog = new Dictionary<string, AlchemyItem>();
-    private readonly InventoryEntry[][] bags;
+    private readonly BagConfig[] bagConfigs;            // 背包条目
+    private readonly Dictionary<string, AlchemyItem> catalog = new Dictionary<string, AlchemyItem>();    // item.id - item 映射
+    private readonly InventoryEntry[][] bags;           // 背包的物品栈
     private readonly WorkbenchStack[] workbench;
 
+    // Model 的构造函数，初始化背包和工作台的物品栈
     public InventoryState(AlchemyDemoConfig config)
     {
         bagConfigs = config.bags;
@@ -83,10 +85,10 @@ public sealed class InventoryState
             }
         }
 
-        workbench = new WorkbenchStack[config.GetWorkbenchSlots().Count];
+        workbench = new WorkbenchStack[config.workbench.Length];
     }
 
-    public event Action Changed;
+    public event Action Changed;        // Changed 事件 - 后续升级 事件总线 统一注册/反注册管理
 
     // 库存查询、移除和使用仅作用于背包中的数量
     public long GetQuantity(string itemId)
@@ -103,10 +105,13 @@ public sealed class InventoryState
     public bool TryAdd(string itemId, int quantity = 1)
     {
         var item = FindItem(itemId);
-        if (item == null || quantity < 1 || !TryFindAddSlot(item, quantity, out var target))
+
+        // target（ItemSlot） 包含 bag 和 index，表示物品要放入的背包和格子索引
+        if (item == null || quantity < 1 || !TryFindAddSlot(item, quantity, out var target))       
             return false;
 
         AddToBagSlot(target, item, quantity);
+
         Changed?.Invoke();
         return true;
     }
@@ -127,6 +132,8 @@ public sealed class InventoryState
                 var removed = Math.Min(stack.Quantity, quantity);
                 stack.Quantity -= removed;
                 quantity -= removed;
+
+                // 如果扣完了就把格子清空
                 if (stack.Quantity == 0)
                     bag[i] = null;
             }
@@ -142,19 +149,23 @@ public sealed class InventoryState
     internal InventoryEntry GetItem(ItemSlot slot) =>
         slot.IsWorkbench ? workbench[slot.Index]?.DisplayEntry : bags[slot.Bag][slot.Index];
 
+    // 能否放入工作台的判定
     internal InventoryEntry GetMovableItem(ItemSlot slot)
     {
         var entry = GetItem(slot);
         return entry?.AllowsWorkbench == true ? entry : null;
     }
 
+    // target 代表要放入的工作台槽位索引，source 代表要移动的物品来源格子
     internal bool TryPlace(ItemSlot source, int target)
     {
+        // 如果源格子和目标格子是同一个工作台槽位，就跳过 
         if (source.IsWorkbench && source.Index == target)
             return false;
 
         var entry = GetMovableItem(source);
         var targetStack = workbench[target];
+
         if (entry == null)
             return false;
 
@@ -185,6 +196,7 @@ public sealed class InventoryState
         return true;
     }
 
+    // 回包逻辑
     internal bool TryReturn(ItemSlot source, int targetBag)
     {
         if (!source.IsWorkbench)

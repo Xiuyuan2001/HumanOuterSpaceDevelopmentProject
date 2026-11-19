@@ -19,9 +19,10 @@ internal sealed class SmeltingService
     {
         this.config = config;
         this.inventory = inventory;
-        var slots = config.GetWorkbenchSlots();
-        slotCount = slots.Count;
-        for (var i = 0; i < slots.Count; i++)
+        var slots = config.workbench;
+        slotCount = slots.Length;
+
+        for (var i = 0; i < slotCount; i++)
         {
             var id = slots[i].id;
             if (!string.IsNullOrEmpty(id))

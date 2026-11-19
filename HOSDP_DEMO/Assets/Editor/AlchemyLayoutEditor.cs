@@ -18,10 +18,11 @@ internal static class AlchemyLayoutEditor
     private static void Sync(MenuCommand command)
     {
         var layout = ((UIManager)command.context).GetComponent<AlchemyUI>();
+        var previewInventory = new InventoryState(layout.PreviewConfig);
         var undoGroup = Undo.GetCurrentGroup();
         Undo.SetCurrentGroupName(UndoLabel);
         Undo.RegisterFullObjectHierarchyUndo(layout.gameObject, UndoLabel);
-        layout.BuildPreview(CreatePrefabChild);
+        layout.BuildPreview(previewInventory, CreatePrefabChild);
 
         foreach (var component in layout.GetComponentsInChildren<Component>(true))
         {

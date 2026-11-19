@@ -106,5 +106,4 @@ MonoBehaviour:
   recipes:
   - {fileID: 11400000, guid: fdff7f6e215848e993db1cda48437189, type: 2}
   failedSpellId: failed_spell
-  legacyWorkbenchSlots: []
   defaultBagIndex: 0

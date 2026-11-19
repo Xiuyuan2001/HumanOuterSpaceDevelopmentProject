@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// 拖拽物品卡片的 UI 组件
 public sealed class ItemDragUI : MonoBehaviour
 {
     [SerializeField] private ItemCardUI dragCardPrefab;

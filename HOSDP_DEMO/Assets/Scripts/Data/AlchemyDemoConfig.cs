@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 // <summary> DEMO 阶段统一的 Data 配置，后续再细拆 </summary>
 
@@ -87,19 +86,20 @@ public sealed class BagStartingItem
     }
 }
 
+// 工作台槽位配置，配方引用的槽位 ID 可能和显示的 label 不同
 [Serializable]
 public sealed class WorkbenchSlotConfig
 {
     [Tooltip("配方引用的槽位 ID，改名称或拖动排序时可以保留这个值")]
-    public string id;
-    public string label;
+    public string id;               // eg: :"effect"
+    public string label;            // eg: "效果". 外部中文显示
 }
 
 // 背包配置
 [Serializable]
 public sealed class BagConfig
 {
-    public BagKind kind;
+    public BagKind kind;        // 背包类型
     public string label;        // 背包标签
 
     [Tooltip("背包的最少格数。初始物品超出时会增加格数")]
@@ -129,30 +129,19 @@ public sealed class BagConfig
 [CreateAssetMenu(menuName = "Alchemy/Demo Config")]
 public sealed class AlchemyDemoConfig : ScriptableObject
 {
-    public AlchemyItem[] items = Array.Empty<AlchemyItem>();
+    public AlchemyItem[] items = Array.Empty<AlchemyItem>();            // 初始物品配置
 
-    public BagConfig[] bags = Array.Empty<BagConfig>();
+    public BagConfig[] bags = Array.Empty<BagConfig>();                 // 背包List配置 - 后续增加背包在此修改
 
-    public WorkbenchSlotConfig[] workbench = Array.Empty<WorkbenchSlotConfig>();
+    public WorkbenchSlotConfig[] workbench = Array.Empty<WorkbenchSlotConfig>();    // 工作台槽位List - 后续增加槽位在此修改
 
-    public SmeltingRecipe[] recipes = Array.Empty<SmeltingRecipe>();
+    public SmeltingRecipe[] recipes = Array.Empty<SmeltingRecipe>();        // 配方List配置 - 在 Array 中添加 SO 配置
 
     [Tooltip("未匹配配方时加入符咒背包的产物 ID")]
     public string failedSpellId;
 
-    [FormerlySerializedAs("workbenchSlots")]
-    [SerializeField, HideInInspector] private string[] legacyWorkbenchSlots = Array.Empty<string>();
-    
     [Tooltip("按背包列表顺序从 0 开始。-1 时优先打开字段背包")]
     [SerializeField, Min(-1)] private int defaultBagIndex = -1;
-
-    internal IReadOnlyList<WorkbenchSlotConfig> GetWorkbenchSlots()
-    {
-        if (workbench.Length > 0 || legacyWorkbenchSlots.Length == 0)
-            return workbench;
-
-        return Array.ConvertAll(legacyWorkbenchSlots, label => new WorkbenchSlotConfig { id = label, label = label });
-    }
 
     internal int DefaultBagIndex
     {

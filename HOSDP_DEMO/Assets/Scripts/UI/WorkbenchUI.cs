@@ -14,8 +14,8 @@ public sealed class WorkbenchUI : SlotPanelUI
 
     protected override void BuildLayout(AlchemyDemoConfig config, Func<GameObject, Transform, GameObject> spawn)
     {
-        var slots = config.GetWorkbenchSlots();
-        BuildSlots(rowsRoot, rowPrefab, slots.Count, spawn, ItemSlot.OnWorkbench, (row, index) =>
+        var slots = config.workbench;
+        BuildSlots(rowsRoot, rowPrefab, slots.Length, spawn, ItemSlot.OnWorkbench, (row, index) =>
         {
             var label = slots[index].label;
             row.name = $"{index + 1:D2} {label}";
